@@ -30,21 +30,21 @@ int main() {
         close(fd); // Close FIFO
         
         printf("[%d] Received: \"%s\"\n", my_pid, rbuf);
-        _exit(my_pid);
+        _exit(my_pid); // terminates child
 
     } else { // parent
 
         printf("[%d] Parent process with child PID: %d\n", my_pid, pid);
-        const char *wbuf = "Hello";
+        const char *wbuf = "This is the message sent in the queue";
         fd = open(name, O_WRONLY);
         write(fd, wbuf, strlen(wbuf) + 1);
+        wait(pid); // waits for child process to terminate before closing the queue
         close(fd);
         unlink(name);
-        wait(500);
 
     }
 
-    printf("[%d] This should not be printed, because the process is terminated\n", my_pid);
+    printf("[%d] This process survived the terminations\n", my_pid);
 
     return 0;
 
