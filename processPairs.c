@@ -15,7 +15,7 @@ int main() {
 
     int pid = fork();
     int my_pid = getpid();
-    pid_t terminated_child;
+    pid_t terminated_child = -1;
 
     if(pid == -1) // error
         printf("[%d] FORK ERROR\n", my_pid);
@@ -31,7 +31,7 @@ int main() {
         close(fd); // Close FIFO
         
         printf("[%d] Received: \"%s\"\n", my_pid, rbuf);
-        _exit(my_pid); // terminates child
+        // _exit(my_pid); // terminates child
 
     } else { // parent
 
@@ -45,7 +45,11 @@ int main() {
 
     }
 
-    printf("[%d] Terminated child: %d", my_pid, terminated_child);
+    if(terminated_child == -1)
+        printf("[%d] No child was terminated\n", my_pid);
+    else
+        printf("[%d] Terminated child: %d\n", my_pid, terminated_child);
+    
     printf("[%d] This process survived the terminations\n", my_pid);
 
     return 0;
