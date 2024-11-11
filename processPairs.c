@@ -12,29 +12,34 @@ int main() {
     int fd;
 
     mkfifo(name, 0666);
-    switch(fork()) {
 
-        case -1: // error
-            break;
-        case 0: // child
-            const int bufsize = 256;
-            char rbuf[bufsize];
-            
-            fd = open(name, O_RDONLY); // Open FIFO for reading
-            read(fd,rbuf,bufsize); // Read from FIFO to buffer
-            close(fd); // Close FIFO
-            
-            printf("Received:\"%s\"\n",rbuf);
-            break;
-        default: // parent
-            const char *wbuf = "Hello";
-            fd = open(name, O_WRONLY);
-            write(fd, wbuf, strlen(wbuf) + 1);
-            close(fd);
-            unlink(name);
+    int pid = fork();
 
-            printf("This is a process");
-            break;
+    if(pid == -1) // error
+        printf("FORK ERROR");
+
+    if(pid == 0) { // child
+
+        printf("Child process!");
+        const int bufsize = 256;
+        char rbuf[bufsize];
+        
+        fd = open(name, O_RDONLY); // Open FIFO for reading
+        read(fd,rbuf,bufsize); // Read from FIFO to buffer
+        close(fd); // Close FIFO
+        
+        printf("Received:\"%s\"\n",rbuf);
+
+    } else { // parent
+
+        printf("Parent process with child PID: %d", pid);
+        const char *wbuf = "Hello";
+        fd = open(name, O_WRONLY);
+        write(fd, wbuf, strlen(wbuf) + 1);
+        close(fd);
+        unlink(name);
+
+        printf("This is a process");
 
     }
 
