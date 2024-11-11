@@ -15,6 +15,7 @@ int main() {
 
     int pid = fork();
     int my_pid = getpid();
+    pid_t terminated_child;
 
     if(pid == -1) // error
         printf("[%d] FORK ERROR\n", my_pid);
@@ -38,12 +39,13 @@ int main() {
         const char *wbuf = "This is the message sent in the queue";
         fd = open(name, O_WRONLY);
         write(fd, wbuf, strlen(wbuf) + 1);
-        wait(pid); // waits for child process to terminate before closing the queue
+        terminated_child = wait(pid); // waits for child process to terminate before closing the queue
         close(fd);
         unlink(name);
 
     }
 
+    printf("[%d] Terminated child: %d", my_pid, terminated_child);
     printf("[%d] This process survived the terminations\n", my_pid);
 
     return 0;
