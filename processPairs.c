@@ -9,18 +9,35 @@
 int main() {
 
     const char *name = "/tmp/myfifo";
-    const char *wbuf = "Hello";
     int fd;
 
     mkfifo(name, 0666);
+    switch(fork()) {
 
-    fd = open(name, O_WRONLY);
-    write(fd, wbuf, strlen(wbuf) + 1);
-    close(fd);
-    unlink(name);
+        case -1: // error
+            break;
+        case 0: // child
+            const int bufsize = 256;
+            char rbuf[bufsize];
+            
+            fd = open(name, O_RDONLY); // Open FIFO for reading
+            read(fd,rbuf,bufsize); // Read from FIFO to buffer
+            close(fd); // Close FIFO
+            
+            printf("Received:\"%s\"\n",rbuf);
+            break;
+        default: // parent
+            const char *wbuf = "Hello";
+            fd = open(name, O_WRONLY);
+            write(fd, wbuf, strlen(wbuf) + 1);
+            close(fd);
+            unlink(name);
 
-    printf("This is a process");
-    fork();
+            printf("This is a process");
+            break;
+
+    }
+
     return 0;
 
 }
