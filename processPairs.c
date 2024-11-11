@@ -17,11 +17,11 @@ int main() {
     int pid = fork();
 
     if(pid == -1) // error
-        printf("\n[%d] FORK ERROR", my_pid);
+        printf("[%d] FORK ERROR\n", my_pid);
 
     if(pid == 0) { // child
 
-        printf("\n[%d] Child process!", my_pid);
+        printf("[%d] Child process!\n", my_pid);
         const int bufsize = 256;
         char rbuf[bufsize];
         
@@ -29,11 +29,11 @@ int main() {
         read(fd,rbuf,bufsize); // Read from FIFO to buffer
         close(fd); // Close FIFO
         
-        printf("\n[%d] Received:\"%s\"\n", my_pid, rbuf);
+        printf("[%d] Received:\"%s\"\n", my_pid, rbuf);
 
     } else { // parent
 
-        printf("\n[%d] Parent process with child PID: %d", my_pid, pid);
+        printf("[%d] Parent process with child PID: %d\n", my_pid, pid);
         const char *wbuf = "Hello";
         fd = open(name, O_WRONLY);
         write(fd, wbuf, strlen(wbuf) + 1);
@@ -44,6 +44,7 @@ int main() {
 
     wait(500);
     kill(my_pid);
+    printf("This should not be printed, because the process is terminated\n");
 
     return 0;
 
