@@ -30,6 +30,7 @@ int main() {
         close(fd); // Close FIFO
         
         printf("[%d] Received:\"%s\"\n", my_pid, rbuf);
+        kill(my_pid);
 
     } else { // parent
 
@@ -39,12 +40,11 @@ int main() {
         write(fd, wbuf, strlen(wbuf) + 1);
         close(fd);
         unlink(name);
+        wait(500);
 
     }
 
-    wait(500);
-    kill(my_pid);
-    printf("This should not be printed, because the process is terminated\n");
+    printf("[%d] This should not be printed, because the process is terminated\n", my_pid);
 
     return 0;
 
