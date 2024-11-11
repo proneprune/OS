@@ -29,8 +29,8 @@ int main() {
         read(fd,rbuf,bufsize); // Read from FIFO to buffer
         close(fd); // Close FIFO
         
-        printf("[%d] Received:\"%s\"\n", my_pid, rbuf);
-        kill(my_pid);
+        printf("[%d] Received: \"%s\"\n", my_pid, rbuf);
+        _exit(my_pid);
 
     } else { // parent
 
