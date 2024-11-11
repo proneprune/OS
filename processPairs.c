@@ -13,8 +13,8 @@ int main() {
 
     mkfifo(name, 0666);
 
-    int my_pid = getpid();
     int pid = fork();
+    int my_pid = getpid();
 
     if(pid == -1) // error
         printf("[%d] FORK ERROR\n", my_pid);
