@@ -42,6 +42,9 @@ int main() {
 
     }
 
+    wait(500);
+    kill(my_pid);
+
     return 0;
 
 }
