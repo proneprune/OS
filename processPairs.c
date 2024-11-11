@@ -31,7 +31,7 @@ int main() {
         close(fd); // Close FIFO
         
         printf("[%d] Received: \"%s\"\n", my_pid, rbuf);
-        // _exit(my_pid); // terminates child
+        exit(my_pid); // terminates child
 
     } else { // parent
 
