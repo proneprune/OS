@@ -13,14 +13,15 @@ int main() {
 
     mkfifo(name, 0666);
 
+    int my_pid = getpid();
     int pid = fork();
 
     if(pid == -1) // error
-        printf("FORK ERROR");
+        printf("\n[%d] FORK ERROR", my_pid);
 
     if(pid == 0) { // child
 
-        printf("Child process!");
+        printf("\n[%d] Child process!", my_pid);
         const int bufsize = 256;
         char rbuf[bufsize];
         
@@ -28,18 +29,16 @@ int main() {
         read(fd,rbuf,bufsize); // Read from FIFO to buffer
         close(fd); // Close FIFO
         
-        printf("Received:\"%s\"\n",rbuf);
+        printf("\n[%d] Received:\"%s\"\n", my_pid, rbuf);
 
     } else { // parent
 
-        printf("Parent process with child PID: %d", pid);
+        printf("\n[%d] Parent process with child PID: %d", my_pid, pid);
         const char *wbuf = "Hello";
         fd = open(name, O_WRONLY);
         write(fd, wbuf, strlen(wbuf) + 1);
         close(fd);
         unlink(name);
-
-        printf("This is a process");
 
     }
 
