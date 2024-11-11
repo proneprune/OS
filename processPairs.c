@@ -13,14 +13,14 @@ int main() {
 
     mkfifo(name, 0666);
 
-    int pid = fork();
+    int child_pid = fork();
     int my_pid = getpid();
     pid_t terminated_child = -1;
 
-    if(pid == -1) // error
+    if(child_pid == -1) // error
         printf("[%d] FORK ERROR\n", my_pid);
 
-    if(pid == 0) { // child
+    if(child_pid == 0) { // child
 
         printf("[%d] Child process!\n", my_pid);
         const int bufsize = 256;
@@ -31,15 +31,15 @@ int main() {
         close(fd); // Close FIFO
         
         printf("[%d] Received: \"%s\"\n", my_pid, rbuf);
-        exit(my_pid); // terminates child
+        exit(0); // terminates child
 
     } else { // parent
 
-        printf("[%d] Parent process with child PID: %d\n", my_pid, pid);
+        printf("[%d] Parent process with child child_pid: %d\n", my_pid, child_pid);
         const char *wbuf = "This is the message sent in the queue";
         fd = open(name, O_WRONLY);
         write(fd, wbuf, strlen(wbuf) + 1);
-        terminated_child = wait(pid); // waits for child process to terminate before closing the queue
+        terminated_child = wait(child_pid); // waits for child process to terminate before closing the queue
         close(fd);
         unlink(name);
 
