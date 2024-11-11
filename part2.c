@@ -17,7 +17,7 @@ long nano_seconds(struct timespec *t_start, struct timespec *t_stop)
 }
 
 struct timespec t_start, t_stop;
-long long time;
+long long measured_time;
 // End of timekeeping
 
 typedef struct { int imin; int imax; double psum; } args_t;
@@ -35,7 +35,7 @@ void *partial_sum(void *p) {
 // clock_gettime(CLOCK_MONOTONIC, &t_start);
 // clock_gettime(CLOCK_MONOTONIC, &t_stop);
 
-// long long temp = nano_seconds(&t_start, &t_stop);
+// measured_time = nano_seconds(&t_start, &t_stop);
 
 int main() {
     pthread_t thrd[NTHRD];
