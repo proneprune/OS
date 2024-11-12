@@ -22,6 +22,7 @@ int main() {
 
     if(child_pid == 0) { // child
 
+        sleep(1);
         printf("[%d] Child process!\n", my_pid);
         const int bufsize = 256;
         char rbuf[bufsize];
@@ -39,7 +40,7 @@ int main() {
         const char *wbuf = "This is the message sent in the queue";
         fd = open(name, O_WRONLY);
         write(fd, wbuf, strlen(wbuf) + 1);
-        terminated_child = wait(child_pid); // waits for child process to terminate before closing the queue
+        terminated_child = wait(&child_pid); // waits for child process to terminate before closing the queue
         close(fd);
         unlink(name);
 
