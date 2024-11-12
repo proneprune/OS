@@ -14,6 +14,21 @@ typedef struct child_stack {
 
 } child_stack;
 
+typedef struct msg_node {
+
+    struct msg_node *next;
+    char *msg;
+    int receiver;
+
+} msg_node;
+
+typedef struct msg_queue {
+
+    msg_node *first;
+    msg_node *last;
+
+} msg_queue;
+
 child_stack *create_child_stack(int length) {
 
     child_stack *new = (child_stack*)malloc(sizeof(child_stack));
@@ -58,16 +73,70 @@ child_stack *add_to_child_stack(child_stack *cs, int PID) {
 
 }
 
+msg_node *create_msg_node() {
+
+    msg_node *new = (msg_node*)malloc(sizeof(msg_node));
+    new->msg = "";
+    new->next = NULL;
+    new->receiver = -1;
+
+    return new;
+
+}
+
+msg_queue *create_msg_queue() {
+
+    msg_queue *new = (msg_queue*)malloc(sizeof(msg_queue));
+    new->first = NULL;
+    new->last = NULL;
+
+    return new;
+
+}
+
+msg_node *dequeue_msg(msg_queue *q) {
+
+    msg_node *t = q->first;
+
+    if(t != NULL)
+        q->first = t->next;
+
+    return t;
+    
+}
+
+msg_queue *enqueue_msg(msg_queue *q, msg_node *m) {
+
+    msg_node *last = q->last;
+
+    if(last == NULL)
+        q->first = m;
+    
+    else {
+
+        q->last = m;
+        last->next = m;
+
+    }
+
+    return q;
+        
+}
+
+// TODO message queue to send/receive to every family
+// int as intended receiver and switch case on negative
+// to specify all/parent/error
+
 int main() {
 
     printf("PROGRAM START\n");
 
-    int itterations = 4;
+    int iterations = 4;
     child_stack *cs = NULL;
     int child_pid = -1;
     int my_pid = getpid();
 
-    for(int i = 0; i < itterations; i++) {
+    for(int i = 0; i < iterations; i++) {
 
         child_pid = fork();
         my_pid = getpid();
@@ -85,7 +154,7 @@ int main() {
       	    printf("[%d] Parent process with child child_pid: %d\n", my_pid, child_pid);
             cs = add_to_child_stack(cs, child_pid);
 
-	}
+	    }
 
     }
 
