@@ -1,0 +1,48 @@
+gsum = 49950000.0
+Threads: 1 , size: 1000
+Result obtained in 0.524348 ms
+---------------------
+gsum = 199900000.0
+Threads: 1 , size: 2000
+Result obtained in 0.446269 ms
+---------------------
+gsum = 799800000.0
+Threads: 1 , size: 4000
+Result obtained in 0.778979 ms
+---------------------
+gsum = 3199600000.0
+Threads: 1 , size: 8000
+Result obtained in 0.668475 ms
+---------------------
+gsum = 12799200000.0
+Threads: 1 , size: 16000
+Result obtained in 0.879607 ms
+---------------------
+gsum = 51198400000.0
+Threads: 1 , size: 32000
+Result obtained in 0.628363 ms
+---------------------
+gsum = 204796800000.0
+Threads: 1 , size: 64000
+Result obtained in 0.664778 ms
+---------------------
+gsum = 819193600000.0
+Threads: 1 , size: 128000
+Result obtained in 1.062167 ms
+---------------------
+gsum = 3276787200000.0
+Threads: 1 , size: 256000
+Result obtained in 1.885350 ms
+---------------------
+gsum = 13107174400000.0
+Threads: 1 , size: 512000
+Result obtained in 2.627434 ms
+---------------------
+gsum = 52428748800000.0
+Threads: 1 , size: 1024000
+Result obtained in 4.329656 ms
+---------------------
+gsum = 209715097600000.0
+Threads: 1 , size: 2048000
+Result obtained in 8.378172 ms
+---------------------
