@@ -78,14 +78,15 @@ int main() {
         args_t thrd_args[NTHRD];
         double gsum = 0.0;
 
-        // Create input array
-        a = (double *) malloc(length * sizeof(double));
-        for (int i = 0; i < length; i++) 
-            a[i] = i;
-
         clock_gettime(CLOCK_MONOTONIC, &t_start);
 
         for (int k = 0; k < 100; k++) {
+
+            // Create input array
+            a = (double *) malloc(length * sizeof(double));
+            for (int i = 0; i < length; i++) 
+                a[i] = i;
+
             // Create threads
             for (int i = 0; i < NTHRD; i++) {
                 thrd_args[i].imin = i * length /NTHRD;
@@ -107,6 +108,7 @@ int main() {
             for(int i = 0; i < NTHRD; i++)
                 gsum += thrd_args[i].psum;
             length = length*2;
+            free(a);
         }
 
         clock_gettime(CLOCK_MONOTONIC, &t_stop);
@@ -114,6 +116,6 @@ int main() {
 
         printf("gsum = %.1f\n", gsum);
         printf("Threads: %d , Length: %d\n", NTHRD, length);
-        printf("Result obtained in %lld ms\n---------------------\n", measured_time/100);
+        printf("Result obtained in %f ms\n---------------------\n", measured_time/100);
     }
 }
