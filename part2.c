@@ -31,12 +31,6 @@ void *partial_sum(void *p) {
         args->psum += a[i];
 }
 
-// // -------- ADD TO MAIN ----------
-// clock_gettime(CLOCK_MONOTONIC, &t_start);
-// clock_gettime(CLOCK_MONOTONIC, &t_stop);
-
-// measured_time = nano_seconds(&t_start, &t_stop);
-
 int main() {
     pthread_t thrd[NTHRD];
     args_t thrd_args[NTHRD];
@@ -46,6 +40,7 @@ int main() {
     for (int i = 0; i < N; i++) 
         a[i] = i;
 
+    clock_gettime(CLOCK_MONOTONIC, &t_start);
     // Create threads
     for (int i = 0; i < NTHRD; i++) {
         thrd_args[i].imin = i * N /NTHRD;
@@ -68,5 +63,10 @@ int main() {
     for(int i = 0; i < NTHRD; i++)
         gsum += thrd_args[i].psum;
 
+    clock_gettime(CLOCK_MONOTONIC, &t_stop);
+    measured_time = nano_seconds(&t_start, &t_stop);
+
     printf("gsum = %.1f\n", gsum);
+    printf("Threads: %d , Length: %d\n", NTHRD, N);
+    printf("Result obtained in %d ns\n---------------------\n");
 }
