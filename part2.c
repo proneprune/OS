@@ -4,7 +4,7 @@
 #include <pthread.h>
 
 #define N 100
-#define NTHRD 4
+#define NTHRD 1
 
 // For timekeeping
 #include <sys/time.h>
@@ -107,6 +107,7 @@ int main() {
             // Compute global sum
             for(int i = 0; i < NTHRD; i++)
                 gsum += thrd_args[i].psum;
+            length = length*2;
         }
 
         clock_gettime(CLOCK_MONOTONIC, &t_stop);
