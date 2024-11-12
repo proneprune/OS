@@ -66,31 +66,31 @@ void *partial_sum(void *p) {
 //     measured_time = nano_seconds(&t_start, &t_stop);
 
 //     printf("gsum = %.1f\n", gsum);
-//     printf("Threads: %d , Length: %d\n", NTHRD, N);
+//     printf("Threads: %d , size: %d\n", NTHRD, N);
 //     printf("Result obtained in %lld ns\n---------------------\n", measured_time);
 // }
 
 int main() {
-    int length = N;
+    int size = 100;
 
-    for (int j = 0; j < 8; j++) {
+    for (int j = 0; j < 10; j++) {
         pthread_t thrd[NTHRD];
         args_t thrd_args[NTHRD];
         double gsum = 0.0;
 
         clock_gettime(CLOCK_MONOTONIC, &t_start);
 
-        for (int k = 0; k < 100; k++) {
+        for (int k = 0; k < 4; k++) {
 
             // Create input array
-            a = (double *) malloc(length * sizeof(double));
-            for (int i = 0; i < length; i++) 
+            a = (double *) malloc(size * sizeof(double));
+            for (int i = 0; i < size; i++) 
                 a[i] = i;
 
             // Create threads
             for (int i = 0; i < NTHRD; i++) {
-                thrd_args[i].imin = i * length /NTHRD;
-                thrd_args[i].imax = (i + 1) * length /NTHRD;
+                thrd_args[i].imin = i * size /NTHRD;
+                thrd_args[i].imax = (i + 1) * size /NTHRD;
                 if (pthread_create(&thrd[i], NULL, partial_sum, &thrd_args[i])) {
                     perror("pthread_create");
                     _exit(1);
@@ -107,7 +107,7 @@ int main() {
             // Compute global sum
             for(int i = 0; i < NTHRD; i++)
                 gsum += thrd_args[i].psum;
-            length = length*2;
+            size = size*2;
             free(a);
         }
 
@@ -115,7 +115,7 @@ int main() {
         measured_time = milli_seconds(&t_start, &t_stop);
 
         printf("gsum = %.1f\n", gsum);
-        printf("Threads: %d , Length: %d\n", NTHRD, length);
+        printf("Threads: %d , size: %d\n", NTHRD, size);
         printf("Result obtained in %f ms\n---------------------\n", measured_time/100);
     }
 }
