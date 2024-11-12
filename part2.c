@@ -3,21 +3,20 @@
 #include <stdio.h>
 #include <pthread.h>
 
-#define N 100
+#define N 1000
 #define NTHRD 1
 
 // For timekeeping
 #include <sys/time.h>
 #include <time.h>
 
-long nano_seconds(struct timespec *t_start, struct timespec *t_stop)
-{
-    return (t_stop->tv_nsec - t_start->tv_nsec) +
-           (t_stop->tv_sec - t_start->tv_sec) * 1000000000;
+double milli_seconds(struct timespec *t_start, struct timespec *t_stop) {
+    return (t_stop->tv_sec - t_start->tv_sec) * 1000.0 + 
+           (t_stop->tv_nsec - t_start->tv_nsec) / 1e6;
 }
 
 struct timespec t_start, t_stop;
-long long measured_time;
+double measured_time;
 // End of timekeeping
 
 typedef struct { int imin; int imax; double psum; } args_t;
@@ -74,7 +73,7 @@ void *partial_sum(void *p) {
 int main() {
     int length = N;
 
-    for (int j = 0; j < 6; j++) {
+    for (int j = 0; j < 8; j++) {
         pthread_t thrd[NTHRD];
         args_t thrd_args[NTHRD];
         double gsum = 0.0;
@@ -111,10 +110,10 @@ int main() {
         }
 
         clock_gettime(CLOCK_MONOTONIC, &t_stop);
-        measured_time = nano_seconds(&t_start, &t_stop);
+        measured_time = milli_seconds(&t_start, &t_stop);
 
         printf("gsum = %.1f\n", gsum);
         printf("Threads: %d , Length: %d\n", NTHRD, length);
-        printf("Result obtained in %lld ns\n---------------------\n", measured_time/100);
+        printf("Result obtained in %lld ms\n---------------------\n", measured_time/100);
     }
 }
