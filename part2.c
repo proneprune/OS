@@ -68,5 +68,5 @@ int main() {
 
     printf("gsum = %.1f\n", gsum);
     printf("Threads: %d , Length: %d\n", NTHRD, N);
-    printf("Result obtained in %d ns\n---------------------\n", measured_time);
+    printf("Result obtained in %lld ns\n---------------------\n", measured_time);
 }
