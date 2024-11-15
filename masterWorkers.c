@@ -90,6 +90,7 @@ child_stack *add_to_child_stack(child_stack *cs, int PID) {
         cs = extend_child_stack(cs, cs->length + STACK_DEFAULT_SIZE);
 
     cs->PIDs[cs->SP++] = PID;
+    printf("SP: %d\n", cs->SP);
 
     return cs;
 
