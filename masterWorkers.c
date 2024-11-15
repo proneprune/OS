@@ -44,7 +44,7 @@ void print_msg_queue(msg_queue *q) {
 
     while(t != NULL) {
 
-        printf("%s", t->msg);
+        printf("%s\n", t->msg);
         t = t->next;
 
     }
@@ -131,10 +131,12 @@ msg_queue *enqueue_msg(msg_queue *q, msg_node *m) {
 
     msg_node *last = q->last;
 
-    if(last == NULL)
+    if(last == NULL) {
+
         q->first = m;
+        q->last = m;
     
-    else {
+    } else {
 
         q->last = m;
         last->next = m;
@@ -160,7 +162,7 @@ void send_message(msg_queue *q, char *msg, int pid, int rec) {
     msg_node* m = create_msg_node();
     m->msg = msg;
     // m->msg = "[%d] %s", pid, msg;
-    m->receiver = rec; // send to everyone
+    m->receiver = rec;
     q = enqueue_msg(q, m);
 
 }
@@ -203,11 +205,10 @@ int main() {
 
         printf("[%d] Child count: %d\n", my_pid, f->stack->SP);
         send_message(f->queue, "Hello this is the parent process!", my_pid, -2);
-        printf("Waiting to print queue");
-        sleep(25);
-        printf("Printing queue");
+        sleep(5);
+        printf("msg_queue:\n");
         print_msg_queue(f->queue);
-        printf("Parent process end");
+        printf("Parent process end\n");
 
     } else
         send_message(f->queue, "This is a child.", my_pid, 0);
