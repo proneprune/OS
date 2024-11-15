@@ -90,7 +90,6 @@ child_stack *add_to_child_stack(child_stack *cs, int PID) {
         cs = extend_child_stack(cs, cs->length + STACK_DEFAULT_SIZE);
 
     cs->PIDs[cs->SP++] = PID;
-    printf("SP: %d\n", cs->SP);
 
     return cs;
 
@@ -189,6 +188,7 @@ int main() {
 
         child_pid = fork();
         my_pid = getpid();
+        printf("family: %p, queue: %p, stack: %p\n", f, f->queue, f->stack);
 
         if(child_pid == -1) // error
             printf("[%d] FORK ERROR\n", my_pid);
