@@ -25,17 +25,17 @@ int main() {
 
     int status;
     int PID_L = fork();
-    int PID_R = 0;
+    int PID_R = 2;
 
-    if(PID_L > 0)
-        PID_R = fork();
+    // if(PID_L > 0)
+        // PID_R = fork();
 
     if(PID_L == -1 || PID_R == -1)
         printf("PID = -1\n");
 
     else if(PID_L == 0 || PID_R == 0) { // child
 
-        sleep(5);
+        sleep(2);
 
         if (mqd == -1) {
 
@@ -62,7 +62,6 @@ int main() {
 
         // Close the message queue
         // mq_close(mqd);
-        wait(&status);
 
     } else { // original parent
 
@@ -78,7 +77,7 @@ int main() {
 
         }
 
-        for(int i = 1; i < 2; i++) // TODO pls fix
+        for(int i = 0; i < 2; i++) // TODO pls fix
             mq_send(mqd,&wmsg[i],i,0);//Write messages to the queue
 
         wait(&status);
