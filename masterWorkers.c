@@ -210,8 +210,10 @@ int main() {
         print_msg_queue(f->queue);
         printf("Parent process end\n");
 
-    } else
+    } else {
+        printf("else\n");
         send_message(f->queue, "This is a child.", my_pid, 0);
+    }
 
     // printf("[%d] PROCESS END\n", my_pid);
     return 0;
