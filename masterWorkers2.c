@@ -45,7 +45,7 @@ int main() {
         }
 
         // Read messages from the queue
-        for (int i = 0; i <= 1; i++) { // TODO issue is prob here
+        for (int i = 1; i <= 2; i++) { // TODO issue is prob here
 
             ssize_t ret = mq_receive(mqd, buf, msg_size_max, NULL);
 
@@ -78,7 +78,7 @@ int main() {
 
         }
 
-        for(int i = 0; i < 2; i++) // TODO pls fix
+        for(int i = 1; i < 2; i++) // TODO pls fix
             mq_send(mqd,&wmsg[i],i,0);//Write messages to the queue
 
         wait(&status);
