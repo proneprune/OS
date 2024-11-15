@@ -203,7 +203,9 @@ int main() {
 
         printf("[%d] Child count: %d\n", my_pid, f->stack->SP);
         send_message(f->queue, "Hello this is the parent process!", my_pid, -2);
+        printf("Waiting to print queue");
         sleep(25);
+        printf("Printing queue");
         print_msg_queue(f->queue);
         printf("Parent process end");
 
