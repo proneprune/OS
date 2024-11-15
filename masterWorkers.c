@@ -159,6 +159,7 @@ family *create_family() {
 
 void send_message(msg_queue *q, char *msg, int pid, int rec) {
 
+    printf("send_message: %s\n", msg);
     msg_node* m = create_msg_node();
     m->msg = msg;
     // m->msg = "[%d] %s", pid, msg;
@@ -210,10 +211,8 @@ int main() {
         print_msg_queue(f->queue);
         printf("Parent process end\n");
 
-    } else {
-        printf("else\n");
+    } else
         send_message(f->queue, "This is a child.", my_pid, 0);
-    }
 
     // printf("[%d] PROCESS END\n", my_pid);
     return 0;
