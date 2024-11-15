@@ -158,10 +158,12 @@ family *create_family() {
 void send_message(msg_queue *q, char *msg, int pid, int rec) {
 
     msg_node* m = create_msg_node();
+    printf("node creation");
     m->msg = msg;
     // m->msg = "[%d] %s", pid, msg;
     m->receiver = rec; // send to everyone
     q = enqueue_msg(q, m);
+    printf("enqueue message");
 
 }
 
