@@ -191,7 +191,7 @@ int main() {
         else if(child_pid == 0) { // child
 
             printf("[%d] Child process.\n", my_pid);
-            f->queue = add_to_child_stack(f->queue, child_pid);
+            f->stack = add_to_child_stack(f->stack, child_pid);
 
         } else // parent
       	    printf("[%d] Parent process with child child_pid: %d\n", my_pid, child_pid);
