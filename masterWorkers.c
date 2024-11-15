@@ -143,6 +143,7 @@ msg_queue *enqueue_msg(msg_queue *q, msg_node *m) {
 
     }
 
+    print_msg_queue(q);
     return q;
         
 }
