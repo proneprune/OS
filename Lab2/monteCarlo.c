@@ -23,6 +23,7 @@ int main() {
     printf("Program start!\n");
     pthread_t ptid;
     pthread_create(&ptid, NULL, &func, NULL);
+    pthread_join(ptid, NULL); // wait for thread to exit
     return 0;
 
 }
