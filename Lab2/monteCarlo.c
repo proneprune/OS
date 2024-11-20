@@ -28,6 +28,7 @@ void *func(int *hit) {
 
     printf("Thread process!\n");
     *hit++;
+    printf("Hit: %d", *hit);
     pthread_exit(NULL);
 
 }
