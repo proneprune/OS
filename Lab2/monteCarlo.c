@@ -12,17 +12,19 @@
 
 #define THREADS 4
 
-void *func(int t) {
+int hit;
+
+void *func(int *hit) {
 
     pthread_detach(pthread_self());
 
-    if(t > 0) { // another thread
+    // if(t > 0) { // recursively spawn another thread
 
-        pthread_t ptid;
-        pthread_create(&ptid, NULL, &func, t-1);
-        pthread_join(ptid, NULL);
+    //     pthread_t ptid;
+    //     pthread_create(&ptid, NULL, &func, t-1);
+    //     pthread_join(ptid, NULL);
         
-    }
+    // }
 
     printf("Thread process!\n");
     pthread_exit(NULL);
@@ -31,12 +33,21 @@ void *func(int t) {
 
 int main() {
 
+    printf("Program start!\n");
+
     int t = THREADS;
 
-    printf("Program start!\n");
-    pthread_t ptid;
-    pthread_create(&ptid, NULL, &func, t);
-    pthread_join(ptid, NULL); // wait for thread to exit
+    pthread_t *threads = (pthread_t*)malloc(THREADS*sizeof(pthread_t));
+
+    for(int i = 0; i < THREADS; i++) // create THREADS amount of processes
+        pthread_create(&threads[i], NULL, &func, &hit);
+
+    for(int i = 0; i < THREADS; i++) // wait for all threads to exit
+        pthread_join(ptid[i], NULL);
+
+    // pthread_t ptid;
+    // pthread_create(&ptid, NULL, &func, &hit);
+    // pthread_join(ptid, NULL); // wait for thread to exit
     return 0;
 
 }
