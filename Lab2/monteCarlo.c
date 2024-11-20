@@ -10,19 +10,23 @@
 
 #pragma omp parallel
 
-void *func(void *arg) {
+#define THREADS 4
+
+void *func(int t) {
 
     pthread_detach(pthread_self());
-    printf("Thread process!\n");
+    printf("Thread process!%d\n", t);
     pthread_exit(NULL);
 
 }
 
 int main() {
 
+    int t = THREADS;
+
     printf("Program start!\n");
     pthread_t ptid;
-    pthread_create(&ptid, NULL, &func, NULL);
+    pthread_create(&ptid, NULL, &func, &t);
     pthread_join(ptid, NULL); // wait for thread to exit
     return 0;
 
