@@ -15,7 +15,16 @@
 void *func(int t) {
 
     pthread_detach(pthread_self());
-    printf("Thread process!%d\n", t);
+
+    if(t > 0) { // another thread
+
+        pthread_t ptid;
+        pthread_create(&ptid, NULL, &func, t-1);
+        pthread_join(ptid, NULL);
+        
+    }
+
+    printf("Thread process!\n");
     pthread_exit(NULL);
 
 }
@@ -26,7 +35,7 @@ int main() {
 
     printf("Program start!\n");
     pthread_t ptid;
-    pthread_create(&ptid, NULL, &func, &t);
+    pthread_create(&ptid, NULL, &func, t);
     pthread_join(ptid, NULL); // wait for thread to exit
     return 0;
 
