@@ -26,9 +26,11 @@ void *func(int *hit) {
         
     // }
 
-    printf("Thread process!\n");
     *hit++;
-    printf("Hit: %d", *hit);
+    printf("Thread process {\n");
+    printf("\thit = %d;\n", *hit);
+    printf("\t&hit = %p;\n", hit);
+    printf("};\n");
     pthread_exit(NULL);
 
 }
@@ -38,6 +40,7 @@ int main() {
     printf("Program start!\n");
 
     hit = 0;
+    hit++;
 
     pthread_t *threads = (pthread_t*)malloc(THREADS*sizeof(pthread_t));
 
