@@ -27,6 +27,7 @@ void *func(int *hit) {
     // }
 
     printf("Thread process!\n");
+    *hit++;
     pthread_exit(NULL);
 
 }
@@ -35,7 +36,7 @@ int main() {
 
     printf("Program start!\n");
 
-    int t = THREADS;
+    hit = 0;
 
     pthread_t *threads = (pthread_t*)malloc(THREADS*sizeof(pthread_t));
 
@@ -44,6 +45,8 @@ int main() {
 
     for(int i = 0; i < THREADS; i++) // wait for all threads to exit
         pthread_join(threads[i], NULL);
+
+    printf("Hit counter: %d\n", hit);
 
     // pthread_t ptid;
     // pthread_create(&ptid, NULL, &func, &hit);
