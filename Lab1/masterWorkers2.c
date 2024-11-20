@@ -27,8 +27,8 @@ int main() {
     int PID_L = fork();
     int PID_R = 2;
 
-    // if(PID_L > 0)
-        // PID_R = fork();
+    if(PID_L > 0)
+        PID_R = fork();
 
     if(PID_L == -1 || PID_R == -1)
         printf("PID = -1\n");
@@ -44,28 +44,26 @@ int main() {
 
         }
 
+        wait(&status);
+
         // Read messages from the queue
-        for (int i = 0; i <= 4; i++) { // TODO issue is prob here
+        ssize_t ret = mq_receive(mqd, buf, msg_size_max, NULL);
 
-            ssize_t ret = mq_receive(mqd, buf, msg_size_max, NULL);
+        if (ret == -1) {
 
-            if (ret == -1) {
-
-                perror("mq_receive");
-                _exit(1);
-
-            }
-
-            printf("Received %ldBytes, message :\"%s\"\n", ret, buf);
+            perror("mq_receive");
+            _exit(1);
 
         }
 
+        printf("Received %ldBytes, message :\"%s\"\n", ret, buf);
+        _exit(1);
         // Close the message queue
         // mq_close(mqd);
 
     } else { // original parent
 
-        const char *wmsg = "msg";
+        const char *wmsg = "messages";
 
         // mqd_t mqd;
         mqd = mq_open(name,O_WRONLY); //Open an EXISTING message queue
@@ -77,8 +75,8 @@ int main() {
 
         }
 
-        for(int i = 0; i < 4; i++) // TODO pls fix
-            mq_send(mqd,&wmsg[i],i,0);//Write messages to the queue
+        mq_send(mqd,wmsg,8,0);//Write messages to the queue
+        mq_send(mqd,wmsg,8,0);//Write messages to the queue
 
         wait(&status);
         mq_close(mqd);//Close the message queue
