@@ -45,7 +45,7 @@ int main() {
         }
 
         // Read messages from the queue
-        for (int i = 0; i <= msg_size_max; i++) { // TODO issue is prob here
+        for (int i = 0; i <= 4; i++) { // TODO issue is prob here
 
             ssize_t ret = mq_receive(mqd, buf, msg_size_max, NULL);
 
@@ -65,7 +65,7 @@ int main() {
 
     } else { // original parent
 
-        const char *wmsg = "Hello! This is the parent transmitting";
+        const char *wmsg = "msg";
 
         // mqd_t mqd;
         mqd = mq_open(name,O_WRONLY); //Open an EXISTING message queue
@@ -77,7 +77,7 @@ int main() {
 
         }
 
-        for(int i = 0; i < msg_size_max; i++) // TODO pls fix
+        for(int i = 0; i < 4; i++) // TODO pls fix
             mq_send(mqd,&wmsg[i],i,0);//Write messages to the queue
 
         wait(&status);
