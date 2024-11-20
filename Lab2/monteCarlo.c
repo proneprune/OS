@@ -43,7 +43,7 @@ int main() {
         pthread_create(&threads[i], NULL, &func, &hit);
 
     for(int i = 0; i < THREADS; i++) // wait for all threads to exit
-        pthread_join(ptid[i], NULL);
+        pthread_join(threads[i], NULL);
 
     // pthread_t ptid;
     // pthread_create(&ptid, NULL, &func, &hit);
