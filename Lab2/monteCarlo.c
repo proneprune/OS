@@ -57,7 +57,7 @@ int main() {
         sleep(1);
         pthread_mutex_lock(&mutex);
         system("clear"); // check linux capability
-        printf("UPDATE: nHit: %f, nTry: %f\n", nHit, nTry);
+        printf("UPDATE: nHit: %d, nTry: %d\n", nHit, nTry);
         pthread_mutex_unlock(&mutex);
 
     }
