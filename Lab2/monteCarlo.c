@@ -103,7 +103,7 @@ int main() {
     //     hit += ret;
     // }
 
-    printf("Hit counter: %d\n", hit);
+    printf("Hit counter: %d\n", nHit);
     free(threads);
 
     return 0;
