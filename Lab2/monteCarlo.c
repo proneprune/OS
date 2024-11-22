@@ -13,11 +13,18 @@
 
 #define THREADS 4
 
+const int msg_num_max = 10;
+const int msg_size_max = 128;
+const char *name ="/mymq";
+
 int shoot() {
 
-    double randX = erand48(); // [0,1)
+    unsigned short xsubiX[3] = {41,12,63};
+    unsigned short xsubiY[3] = {125,312,124};
+
+    double randX = erand48(xsubiX); // [0,1)
     randX = (randX*2) - 1; // [-1,1)
-    double randY = erand48(); // [0,1)
+    double randY = erand48(xsubiY); // [0,1)
     randY = (randY*2) - 1; // [-1,1)
 
     double dist = sqrt(pow(randX,2)+pow(randY,2));
@@ -50,10 +57,6 @@ void *thread_function() {
     pthread_exit(NULL);
 
 }
-
-const int msg_num_max = 10;
-const int msg_size_max = 128;
-const char *name ="/mymq";
 
 int main() {
 
