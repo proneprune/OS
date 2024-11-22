@@ -4,7 +4,7 @@
 #include <pthread.h>
 
 #define N 1000
-#define NTHRD 1
+#define NTHRD 2
 
 // For timekeeping
 #include <sys/time.h>
@@ -71,16 +71,17 @@ void *partial_sum(void *p) {
 // }
 
 int main() {
-    int size = 100;
+    int size = N;
+    int times = 100;
 
-    for (int j = 0; j < 10; j++) {
+    for (int j = 0; j < 12; j++) {
         pthread_t thrd[NTHRD];
         args_t thrd_args[NTHRD];
         double gsum = 0.0;
 
         clock_gettime(CLOCK_MONOTONIC, &t_start);
 
-        for (int k = 0; k < 4; k++) {
+        for (int k = 0; k < times; k++) {
 
             // Create input array
             a = (double *) malloc(size * sizeof(double));
@@ -107,7 +108,6 @@ int main() {
             // Compute global sum
             for(int i = 0; i < NTHRD; i++)
                 gsum += thrd_args[i].psum;
-            size = size*2;
             free(a);
         }
 
@@ -116,6 +116,7 @@ int main() {
 
         printf("gsum = %.1f\n", gsum);
         printf("Threads: %d , size: %d\n", NTHRD, size);
-        printf("Result obtained in %f ms\n---------------------\n", measured_time/100);
+        printf("Result obtained in %f ms\n---------------------\n", measured_time/times);
+	size = size*2;
     }
 }
