@@ -23,7 +23,6 @@ int shoot() {
     randY = (randY*2) - 1; // [-1,1)
 
     double dist = sqrt(pow(randX,2)+pow(randY,2));
-    printf("dist: %f\n", dist);
 
     if(dist > 1)
         return 0;
