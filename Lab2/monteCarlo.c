@@ -14,15 +14,15 @@ pthread_mutex_t mutex;
 
 int shoot() {
 
-    unsigned short xsubiX[3] = {nTry,nTry*2,nTry*3};
-    unsigned short xsubiY[3] = {nTry*3,nTry*4,nTry*5};
+    unsigned short xsubiX[3] = {pthread_self(),pthread_self()*2,pthread_self()*3};
+    unsigned short xsubiY[3] = {pthread_self()*4,pthread_self()*5,pthread_self()*6};
 
     double randX = erand48(xsubiX); // [0,1)
     randX = (randX*2) - 1; // [-1,1)
     double randY = erand48(xsubiY); // [0,1)
     randY = (randY*2) - 1; // [-1,1)
 
-    double dist = sqrt(pow(randX,2)+pow(randY,2));
+    double dist = pow(randX,2)+pow(randY,2);
 
     if(dist > 1)
         return 0;
