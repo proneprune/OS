@@ -47,7 +47,9 @@ int main() {
         wait(&status);
 
         // Read messages from the queue
-        ssize_t ret = mq_receive(mqd, buf, msg_size_max, NULL);
+        for (int i = 0; i <= msg_size_max; i++) { // TODO issue is prob here
+
+            ssize_t ret = mq_receive(mqd, buf, msg_size_max, NULL);
 
         if (ret == -1) {
 

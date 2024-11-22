@@ -7,54 +7,96 @@
 #include <string.h>
 #include <omp.h>
 #include <pthread.h>
+#include <math.h>
 
 #pragma omp parallel
 
 #define THREADS 4
 
-int hit;
+int shoot() {
 
-void *func(int *hit) {
+    double randX = erand48(); // [0,1)
+    randX = (randX*2) - 1; // [-1,1)
+    double randY = erand48(); // [0,1)
+    randY = (randY*2) - 1; // [-1,1)
+
+    double dist = sqrt(pow(randX,2)+pow(randY,2));
+
+    if(dist > 1)
+        return 0;
+    return 1;
+    
+}
+
+void *thread_function() {
 
     pthread_detach(pthread_self());
 
-    // if(t > 0) { // recursively spawn another thread
+    mqd_t mqd;
 
-    //     pthread_t ptid;
-    //     pthread_create(&ptid, NULL, &func, t-1);
-    //     pthread_join(ptid, NULL);
-        
-    // }
+    mqd = mq_open(name,O_WRONLY); //Open an EXISTING message queue
 
-    *hit++;
+    if(mqd == -1) {
+
+        perror("mq_open");
+        _exit(1);
+
+    }
+
+    mq_send(mqd,shoot(),8,0);//Write messages to the queue
+
     printf("Thread process {\n");
-    printf("\thit = %d;\n", *hit);
-    printf("\t&hit = %p;\n", hit);
     printf("};\n");
     pthread_exit(NULL);
 
 }
 
+const int msg_num_max = 10;
+const int msg_size_max = 128;
+const char *name ="/mymq";
+
 int main() {
 
     printf("Program start!\n");
-
-    hit = 0;
-    hit++;
+    
+    char msg[msg_size_max];
+    mqd_t mqd;
+    struct mq_attr attr;
+    char buf[msg_size_max];
+    // Define the queue attributes
+    attr.mq_maxmsg = msg_num_max;
+    attr.mq_msgsize = msg_size_max;
+    // Create and open a message queue
+    mqd = mq_open(name, O_RDONLY | O_CREAT, 0666, &attr);
 
     pthread_t *threads = (pthread_t*)malloc(THREADS*sizeof(pthread_t));
 
     for(int i = 0; i < THREADS; i++) // create THREADS amount of processes
-        pthread_create(&threads[i], NULL, &func, &hit);
+        pthread_create(&threads[i], NULL, &thread_function, NULL);
 
     for(int i = 0; i < THREADS; i++) // wait for all threads to exit
         pthread_join(threads[i], NULL);
 
-    printf("Hit counter: %d\n", hit);
+    int hit = 0;
 
-    // pthread_t ptid;
-    // pthread_create(&ptid, NULL, &func, &hit);
-    // pthread_join(ptid, NULL); // wait for thread to exit
+    for(int i = 0; i < THREADS; i++) {// add hits
+
+        ssize_t ret = mq_receive(mqd, buf, msg_size_max, NULL);
+
+        if (ret == -1) {
+
+            perror("mq_receive");
+            _exit(1);
+
+        }
+
+        hit += ret;
+    }
+    
+
+    printf("Hit counter: %d\n", hit);
+    free(threads);
+
     return 0;
 
 }
