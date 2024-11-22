@@ -67,6 +67,15 @@ void *thread_function() {
 int main() {
 
     printf("Program start!\n");
+
+    int tHit = 0;
+
+    for(int i = 0; i < 1000; i++)
+        tHit += shoot();
+
+    double tResult = tHit / 1000;
+
+    printf("shoot test: %f\n", tResult);
     
     // char msg[msg_size_max];
     // mqd_t mqd;
