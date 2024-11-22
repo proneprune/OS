@@ -57,7 +57,7 @@ int main() {
         sleep(1);
         pthread_mutex_lock(&mutex);
         system("clear"); // check linux capability
-        double ratio = 4 * nHit/nTry;
+        double ratio = 4 * (double)nHit/nTry;
         printf("UPDATE: nHit: %d, nTry: %d, ratio: %f\n", nHit, nTry, ratio);
         pthread_mutex_unlock(&mutex);
 
