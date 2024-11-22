@@ -39,9 +39,9 @@ int sem_wait(mysemaphore_t* s) {
     /* FUNCTION TO BE IMPLEMENTED */
     int delay = 100;
     while (atomic_flag_test_and_set(&s->flg)) {
-        // usleep(delay);
-        // delay *= 2;  
-        // if (delay > 1000) delay = 1000; // Limit delay to 1 millisec
+        usleep(delay);
+        delay *= 2;  
+        if (delay > 1000) delay = 1000; // Limit delay to 1 millisec
     }
     return 0;
 }
@@ -54,7 +54,7 @@ int sem_post(mysemaphore_t* s) {
 
 void* func() {
     sleep(1);
-    // sem_wait(&sem);
+    sem_wait(&sem);
     counter++;
     sem_post(&sem);
     return NULL;
@@ -78,7 +78,8 @@ int main() {
         pthread_join(thr[i], NULL);
     }
 
-    printf("Part 2 time : %d\n", measured_time);
+    // printf("Part 2 time : %f\n", measured_time);
+    printf("Part 3 time : %f\n", measured_time);
     printf("counter = %d\n", counter);
 
     return 0;
