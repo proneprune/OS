@@ -64,7 +64,14 @@ void convert_virtual_to_physical(){
     // Take virtual address, check first 8 bits = frame number
     // We take the virtual address mod frame size = page offset
     // Frame number X frame size + offset = physical address
-    llr
+    //llr
+
+    //in the page table the page number will be uninitialized and
+    //as we start converting virtual addresses to physical addresses
+    //we will update the page number in the page table
+    //so the first page number we get e.g. 10 will be linked to the
+    //first frame number, 0. The second page number we get e.g. 15
+    //will be linked to the second frame number, 1.
 }
 
 
