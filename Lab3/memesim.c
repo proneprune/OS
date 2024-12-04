@@ -153,28 +153,53 @@ int main() {
     populate_virtual_memory(vm);
 
     page_table *pt = create_page_table(PAGES_COUNT);
+    page_table *TLB = create_page_table(TLB_ENTRIES);
+
+    int TLB_exit = 0;
 
     // PRINT DESIRED OUTPUT
     for (int i = 0; i < 1000; i++) {
 
         unsigned int virtual_address = vm->data[i] & 0xFFFF;
         unsigned int page_number = virtual_address/PAGES_SIZE;
+        unsigned int frame_number;
         
-        unsigned int frame_number = conditional_PT_add(pt, page_number);
-        unsigned int physical_address = convert_virtual_to_physical(virtual_address, frame_number);
-        printf("Virtual address: %d Physical address: %d\n", virtual_address, physical_address);
+        //  CHECK TLB
+        // if page number is in TLB -> we get our frame number
+        // else:
+        // add the page to the TLB and
+        // conditional_PT_add(pt, page_number);
+
+        int inTLB = 0;
+        // Look through TLB
+        for (int i = 0; i < TLB_ENTRIES; i++) {
+            page *currentpage = TLB->entries[i];
+            if (currentpage->page_index == page_number) {
+                inTLB = 1;
+                frame_number = currentpage->frame_index;
+                break;
+            }
+        }
+
+        if (inTLB != 1) { // ADD ALL THE FUCKING CODE TO ADD TO PAGE TABLE
+            TLB_exit++;
+            frame_number = conditional_PT_add(pt, page_number);
+            page_table_add(TLB, pt->entries[frame_number]);
+            
+            if(TLB->SP == TLB_ENTRIES)
+                TLB->SP = 0;
         
+        }
+        
+    // This will run independent of weather TBL was used or not  
+    unsigned int physical_address = convert_virtual_to_physical(virtual_address, frame_number);
+    printf("Virtual address: %d Physical address: %d\n", virtual_address, physical_address);
     }
+    printf("\n Exit counter: %d\n", TLB_exit);
 
     // PRINT PAGE TABLE
-    printf("\nPAGE TABLE\n");
-    for(int i = 0; i < pt->SP; i++)
-        printf("| page_index:  %3u  |  frame_index: %3u |\n", pt->entries[i]->page_index, pt->entries[i]->frame_index);
-
-    page_table *TLB = create_page_table(16);
-    page *p = create_page(0,0,0);
-    page_table_add(TLB, p);
-    if(TLB->SP == TLB_ENTRIES)
-        TLB->SP = 0;
+    // printf("\nPAGE TABLE\n");
+    // for(int i = 0; i < pt->SP; i++)
+    //     printf("| page_index:  %3u  |  frame_index: %3u |\n", pt->entries[i]->page_index, pt->entries[i]->frame_index);
     
 }
