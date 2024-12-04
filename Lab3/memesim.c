@@ -12,7 +12,7 @@ typedef struct memory {
 
     int count;
     int size;
-    int *data;
+    unsigned int *data;
 
 } memory;
 
@@ -91,6 +91,18 @@ int *page_table_add(page_table *pt, page *tp) {
 
 }
 
+int check_duplicate(page_table *pt, page *tp) {
+
+    unsigned int fi = tp->frame_index;
+
+    for(int i = 0; i < pt->SP; i++) {
+
+        if(pt->entries[i]->page_index == tp->frame_index);
+
+    }
+
+}
+
 void *populate_virtual_memory(memory *vm) {
     
     // INPUT FILE
@@ -110,7 +122,6 @@ void *populate_virtual_memory(memory *vm) {
         strcpy(copy, address_input);
         vm->data[count] = atoi(address_input);
         count++;
-
     }
 
     fclose(fptr);
@@ -168,6 +179,11 @@ void convert_virtual_to_physical(){
     //so the first page number we get e.g. 10 will be linked to the
     //first frame number, 0. The second page number we get e.g. 15
     //will be linked to the second frame number, 1.
+
+
+
+    unsigned int number = 0x12345678; // Example number
+    unsigned int lsb16 = number & 0xFFFF; // Extract 16 LSBs
 }
 
 int main() {
@@ -178,7 +194,12 @@ int main() {
 
     page_table *pt = create_page_table(1000);
 
-    for(int i = 0, p = 0; i < vm->size; i += PAGES_SIZE, p++)
-        page_table_add(pt, create_page(p,0,0,0));
+    for(int i = 0; i < vm->size; i++) {
+
+        // add new page to table
+        page *np = create_page(vm->data[i]/PAGES_SIZE,i,0,0);
+        page_table_add(pt, np);
+        
+    }
 
 }
