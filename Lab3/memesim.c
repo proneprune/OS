@@ -18,18 +18,17 @@ typedef struct memory {
 
 typedef struct page {
 
-    int page_index; // virtual address divided by page_size
-    int frame_index; // serial
+    unsigned int page_index; // virtual address divided by page_size
+    unsigned int frame_index; // serial
     int valid;
-    int dirty;
 
 } page;
 
 typedef struct page_table {
 
     page **entries;
-    int SP;
-    int size;
+    unsigned int SP;
+    unsigned int size;
 
 } page_table;
 
@@ -40,67 +39,79 @@ memory *create_memory(int count, int size) {
     new->size = size;
     new->data = (int *)malloc(count * size);
     return new;
-
 }
 
-page *create_page(int page_index, int frame_index, int valid, int dirty) {
+page *create_page(unsigned int page_index, unsigned int frame_index, int valid) {
 
     page *new = (page *)malloc(sizeof(page));
     new->page_index = page_index;
     new->frame_index = frame_index;
     new->valid = valid;
-    new->dirty = dirty;
     return new;
-
 }
 
-page_table *create_page_table(int size) {
+page_table *create_page_table(unsigned int size) {
 
     page_table *new = (page_table *)malloc(sizeof(page_table));
     new->entries = (page **)malloc(size * sizeof(page *));
     new->SP = 0;
     new->size = size;
 
-    for(int i = 0; i < size; i++)
+    for(unsigned int i = 0; i < size; i++)
         new->entries[i] = NULL;
 
     return new;
-
 }
 
-int *page_table_add(page_table *pt, page *tp) {
+page_table *page_table_add(page_table *pt, page *tp) {
 
     if(pt == NULL) {
 
         printf("ERROR: NO PAGE TABLE\n");
         _exit(1);
-
     }
 
     if(pt->SP == pt->size) {
 
         printf("ERROR: PAGE INDEX OUT OF RANGE\n");
         _exit(1);
-
     }
 
-    int writeAt = pt->SP;
-    pt->entries[writeAt] = tp;
-    pt->SP++;
-    return writeAt;
+    pt->entries[pt->SP++] = tp;
+    return pt;
 
 }
 
-int check_duplicate(page_table *pt, page *tp) {
+unsigned int check_duplicate(page_table *pt, unsigned int pi) {
 
-    unsigned int fi = tp->frame_index;
+    unsigned int ptPi = 0;
+    int ptSP = pt->SP;
 
-    for(int i = 0; i < pt->SP; i++) {
+    for(int i = 0; i < ptSP; i++) {
 
-        if(pt->entries[i]->page_index == tp->frame_index);
+        ptPi = pt->entries[i]->page_index;
+
+        if(pi == ptPi) return i;
 
     }
 
+    return ptSP;
+
+}
+
+unsigned int conditional_PT_add(page_table *pt, unsigned int pi) {
+
+    unsigned int ptSP = check_duplicate(pt, pi);
+
+    if(pt->entries[ptSP] == NULL) {
+        
+        page *np = create_page(pi, ptSP, 0);
+        page_table_add(pt, np);
+
+    }
+    
+    return ptSP;
+    
 }
 
 void *populate_virtual_memory(memory *vm) {
@@ -129,77 +140,41 @@ void *populate_virtual_memory(memory *vm) {
 
 }
 
-//converting from virtual memory to physical memory
-//we use the page number in the virtual memory and set it as a
-//tag in our page table. The tag is linked to the page number of
-//the physical address. We then take the physical page number and
+unsigned int convert_virtual_to_physical(unsigned int virtual_address, int frame_number){
+    // physical address = frame number · page size + offset
+    unsigned int physical_address = frame_number * PAGES_SIZE + (virtual_address % PAGES_SIZE);
 
-
-// void convert_virtual_to_physical(int *virtual_addresses, int num_addresses, page_table *pt) {
-//     for (int i = 0; i < num_addresses; i++) {
-//         int va = virtual_addresses[i];  // Get virtual address
-
-//         // Step 1: Extract page number and offset from virtual address
-//         int page_number = va / C;  // Page number = Virtual Address / Page Size
-//         int page_offset = va % C;  // Page offset = Virtual Address % Page Size
-
-//         // Step 2: Check if the page is in the page table (i.e., valid)
-//         if (pt->entries[page_number].valid == 0) {
-//             // Page fault: This page is not in memory, so we assign a new frame
-//             if (pt->next_free_frame >= N) {
-//                 printf("Error: No free frames available.\n");
-//                 return;
-//             }
-            
-//             // Assign the page to the next available frame
-//             pt->entries[page_number].frame_number = pt->next_free_frame;
-//             pt->entries[page_number].valid = 1;  // Mark the page as valid
-//             pt->next_free_frame++;  // Move to the next free frame
-//         }
-
-//         // Step 3: Calculate the physical address
-//         int frame_number = pt->entries[page_number].frame_number;
-//         int physical_address = (frame_number * C) + page_offset;
-
-//         // Step 4: Print or store the physical address
-//         printf("Virtual Address: %d -> Physical Address: %d\n", va, physical_address);
-//     }
-// }
-
-
-void convert_virtual_to_physical(){
-    // Take virtual address, check first 8 bits = frame number
-    // We take the virtual address mod frame size = page offset
-    // Frame number X frame size + offset = physical address
-    //llr
-
-    //in the page table the page number will be uninitialized and
-    //as we start converting virtual addresses to physical addresses
-    //we will update the page number in the page table
-    //so the first page number we get e.g. 10 will be linked to the
-    //first frame number, 0. The second page number we get e.g. 15
-    //will be linked to the second frame number, 1.
-
-
-
-    unsigned int number = 0x12345678; // Example number
-    unsigned int lsb16 = number & 0xFFFF; // Extract 16 LSBs
+    return physical_address;
 }
 
 int main() {
-
+    
     memory *vm = create_memory(PAGES_COUNT, PAGES_SIZE);
     populate_virtual_memory(vm);
-    printf("test: %d\n", vm->data[999]);
 
-    page_table *pt = create_page_table(1000);
+    page_table *pt = create_page_table(PAGES_COUNT);
 
-    for(int i = 0; i < vm->size; i++) {
+    // PRINT DESIRED OUTPUT
+    for (int i = 0; i < 1000; i++) {
 
-        // add new page to table
-        page *np = create_page(vm->data[i]/PAGES_SIZE,i,0,0);
-        page_table_add(pt, np);
+        unsigned int virtual_address = vm->data[i] & 0xFFFF;
+        unsigned int page_number = virtual_address/PAGES_SIZE;
+        
+        unsigned int frame_number = conditional_PT_add(pt, page_number);
+        unsigned int physical_address = convert_virtual_to_physical(virtual_address, frame_number);
+        printf("Virtual address: %d Physical address: %d\n", virtual_address, physical_address);
         
     }
 
+    // PRINT PAGE TABLE
+    printf("\nPAGE TABLE\n");
+    for(int i = 0; i < pt->SP; i++)
+        printf("| page_index:  %3u  |  frame_index: %3u |\n", pt->entries[i]->page_index, pt->entries[i]->frame_index);
+
+    page_table *TLB = create_page_table(16);
+    page *p = create_page(0,0,0);
+    page_table_add(TLB, p);
+    if(TLB->SP == TLB_ENTRIES)
+        TLB->SP = 0;
+    
 }
