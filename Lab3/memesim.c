@@ -12,7 +12,7 @@ typedef struct memory {
 
     int count;
     int size;
-    unsigned int *data;
+    int *data;
 
 } memory;
 
@@ -115,7 +115,7 @@ unsigned int conditional_PT_add(page_table *pt, unsigned int pi) {
 }
 
 void *populate_virtual_memory(memory *vm) {
-    
+
     // INPUT FILE
     FILE *fptr = fopen("addresses.txt", "r");
 
@@ -124,7 +124,6 @@ void *populate_virtual_memory(memory *vm) {
     
     char *lineptr = malloc(sizeof(char) * 200);
     char *address_input = (char *)malloc(5 * sizeof(char));
-
     int count = 0;
 
     while (fgets(address_input, 200, fptr) > 0) {
@@ -133,6 +132,7 @@ void *populate_virtual_memory(memory *vm) {
         strcpy(copy, address_input);
         vm->data[count] = atoi(address_input);
         count++;
+
     }
 
     fclose(fptr);
@@ -151,6 +151,13 @@ int main() {
     
     memory *vm = create_memory(PAGES_COUNT, PAGES_SIZE);
     populate_virtual_memory(vm);
+    printf("test: %d\n", vm->data[999]);
+
+    /*
+    printf("vm->data: %d", vm->data[0]);
+    for(int i = 1; i < 100; i++)
+        printf(", %d", vm->data[i]);
+
 
     page_table *pt = create_page_table(PAGES_COUNT);
     page_table *TLB = create_page_table(TLB_ENTRIES);
@@ -173,33 +180,50 @@ int main() {
         int inTLB = 0;
         // Look through TLB
         for (int i = 0; i < TLB_ENTRIES; i++) {
+
             page *currentpage = TLB->entries[i];
+
+            if(currentpage == NULL)
+                continue;
+
             if (currentpage->page_index == page_number) {
+
                 inTLB = 1;
                 frame_number = currentpage->frame_index;
                 break;
+
             }
+
         }
 
         if (inTLB != 1) { // ADD ALL THE FUCKING CODE TO ADD TO PAGE TABLE
+        
             TLB_exit++;
             frame_number = conditional_PT_add(pt, page_number);
             page_table_add(TLB, pt->entries[frame_number]);
             
-            if(TLB->SP == TLB_ENTRIES)
-                TLB->SP = 0;
+            // if(TLB->SP == TLB_ENTRIES)
+            //     TLB->SP = 0;
         
         }
         
-    // This will run independent of weather TBL was used or not  
-    unsigned int physical_address = convert_virtual_to_physical(virtual_address, frame_number);
-    printf("Virtual address: %d Physical address: %d\n", virtual_address, physical_address);
+        // This will run independent of weather TBL was used or not
+        unsigned int physical_address = convert_virtual_to_physical(virtual_address, frame_number);
+        // printf("Virtual address: %u Physical address: %u\n", virtual_address, physical_address);
+
     }
+
     printf("\n Exit counter: %d\n", TLB_exit);
+
+    printf("TLB: %u", TLB->entries[0]->frame_index);
+    for(int i = 1; i < TLB_ENTRIES; i++)
+        printf(", %u", TLB->entries[i]->frame_index);
 
     // PRINT PAGE TABLE
     // printf("\nPAGE TABLE\n");
     // for(int i = 0; i < pt->SP; i++)
     //     printf("| page_index:  %3u  |  frame_index: %3u |\n", pt->entries[i]->page_index, pt->entries[i]->frame_index);
+
+    */
     
 }
