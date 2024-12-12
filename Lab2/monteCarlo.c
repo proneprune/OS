@@ -14,8 +14,8 @@ pthread_mutex_t mutex;
 
 int shoot(int loop_index) {
 
-    unsigned short xsubiX[3] = {pthread_self()+loop_index,pthread_self()+loop_index*2,pthread_self()+loop_index*3};
-    unsigned short xsubiY[3] = {pthread_self()+loop_index*4,pthread_self()+loop_index*5,pthread_self()+loop_index*6};
+    unsigned short xsubiX[3] = {pthread_self()+loop_index,pthread_self()+loop_index+2,pthread_self()+loop_index+3};
+    unsigned short xsubiY[3] = {pthread_self()+loop_index+4,pthread_self()+loop_index+5,pthread_self()+loop_index+6};
 
     double randX = erand48(xsubiX); // [0,1)
     randX = (randX*2) - 1; // [-1,1)
@@ -36,9 +36,11 @@ void *thread_function() {
     int i = 0;
 
     while (1){
+        pthread_mutex_lock(&mutex);
         int shot = shoot(i++);
         nHit += shot;
         nTry++;
+        pthread_mutex_unlock(&mutex);
     }
 
     pthread_exit(NULL);
