@@ -22,7 +22,7 @@ int shoot(int loop_index) {
     double randY = erand48(xsubiY); // [0,1)
     randY = (randY*2) - 1; // [-1,1)
 
-    double dist = pow(randX,2)+pow(randY,2);
+    double dist = (randX*randX)+(randY*randY);
 
     if(dist > 1)
         return 0;
