@@ -30,6 +30,8 @@ double measured_time;
 // ta bort fil
 
 
+
+//this is the main function for using buffers.
 int main(){
     char dv[n_io] = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\n\0";
     char buf[n_buf];
@@ -68,7 +70,7 @@ int main(){
 }
 
 
-
+//this is the main function for just writing directly to the file
  /*int main(){
      char dv[n_io] = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\n\0";
     double total_time = 0.0;
