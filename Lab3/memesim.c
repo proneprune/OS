@@ -151,12 +151,12 @@ int main() {
     
     memory *vm = create_memory(PAGES_COUNT, PAGES_SIZE);
     populate_virtual_memory(vm);
-    printf("test: %d\n", vm->data[999]);
+    // printf("test: %d\n", vm->data[999]);
 
-    /*
-    printf("vm->data: %d", vm->data[0]);
-    for(int i = 1; i < 100; i++)
-        printf(", %d", vm->data[i]);
+    
+    // printf("vm->data: %d", vm->data[0]);
+    // for(int i = 1; i < 100; i++)
+    //     printf(", %d", vm->data[i]);
 
 
     page_table *pt = create_page_table(PAGES_COUNT);
@@ -202,14 +202,14 @@ int main() {
             frame_number = conditional_PT_add(pt, page_number);
             page_table_add(TLB, pt->entries[frame_number]);
             
-            // if(TLB->SP == TLB_ENTRIES)
-            //     TLB->SP = 0;
+             if(TLB->SP == TLB_ENTRIES)
+                 TLB->SP = 0;
         
         }
         
         // This will run independent of weather TBL was used or not
         unsigned int physical_address = convert_virtual_to_physical(virtual_address, frame_number);
-        // printf("Virtual address: %u Physical address: %u\n", virtual_address, physical_address);
+         printf("Virtual address: %u Physical address: %u\n", virtual_address, physical_address);
 
     }
 
@@ -224,6 +224,6 @@ int main() {
     // for(int i = 0; i < pt->SP; i++)
     //     printf("| page_index:  %3u  |  frame_index: %3u |\n", pt->entries[i]->page_index, pt->entries[i]->frame_index);
 
-    */
+    
     
 }
