@@ -9,7 +9,7 @@
 #include <time.h>
 
 #define n_io 64
-#define n_buf 128
+#define n_buf 1024
 
 // For timekeeping
 
@@ -33,6 +33,8 @@ double measured_time;
 int main(){
     char dv[n_io] = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\n\0";
     char buf[n_buf];
+    double total_time = 0.0;
+    for(int j = 0; j<10; j++){
     FILE *fptr;
     fptr = fopen("file.txt", "w");
     if(fptr == NULL){
@@ -46,39 +48,58 @@ int main(){
         //fputs(dv, fptr);
         setvbuf(fptr, buf, _IOFBF, sizeof(buf));
 
-    clock_gettime(CLOCK_MONOTONIC, &t_stop);
-    measured_time = milli_seconds(&t_start, &t_stop);
-
-    printf("Result obtained in %f ms\n---------------------\n", measured_time);
+    
 
 
     }
-    
-    
-    
-    
+    clock_gettime(CLOCK_MONOTONIC, &t_stop);
+    measured_time = milli_seconds(&t_start, &t_stop);
+    total_time += measured_time;
     fclose(fptr);
+    }
+
+    printf("Result obtained in %f ms\n---------------------\n", total_time/10);
+    
+    
+    
+    
+    
     return 0;
 }
 
 
 
-// int main(){
-//     char dv[n_io] = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\n\0";
-//     FILE *fptr;
-//     fptr = fopen("file.txt", "w");
-//     if(fptr == NULL){
-//         printf("Error!");
-//         exit(1);
-//     }
-//     //fprintf(fptr, "Hello World!");
-//     for(int i = 0; i < (pow(2, 30)/n_io); i++){
-//         fputs(dv, fptr);
-//     }
+ /*int main(){
+     char dv[n_io] = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\n\0";
+    double total_time = 0.0;
+
+     
+     for(int j = 0; j < 10; j++){
+     FILE *fptr;
+     
+     fptr = fopen("file.txt", "w");
+     if(fptr == NULL){
+         printf("Error!");
+         exit(1);
+     }
+    
+     clock_gettime(CLOCK_MONOTONIC, &t_start);
+     //fprintf(fptr, "Hello World!");
+     for(int i = 0; i < (pow(2, 30)/n_io); i++){
+         fputs(dv, fptr);
+     }
     
     
     
     
-//     fclose(fptr);
-//     return 0;
-// }
+     fclose(fptr);
+
+    clock_gettime(CLOCK_MONOTONIC, &t_stop);
+    measured_time = milli_seconds(&t_start, &t_stop);
+    total_time += measured_time;
+    }
+
+    printf("Result obtained in %f ms\n---------------------\n", total_time/10);
+
+     return 0;
+ }*/
