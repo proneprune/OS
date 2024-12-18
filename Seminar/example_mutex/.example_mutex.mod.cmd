@@ -1,0 +1,1 @@
+savedcmd_/home/ubuntu/Desktop/OS/Seminar/example_mutex/example_mutex.mod := printf '%s\n'   example_mutex.o | awk '!x[$$0]++ { print("/home/ubuntu/Desktop/OS/Seminar/example_mutex/"$$0) }' > /home/ubuntu/Desktop/OS/Seminar/example_mutex/example_mutex.mod

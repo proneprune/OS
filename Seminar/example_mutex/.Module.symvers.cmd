@@ -1,0 +1,1 @@
+savedcmd_/home/ubuntu/Desktop/OS/Seminar/example_mutex/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/ubuntu/Desktop/OS/Seminar/example_mutex/Module.symvers -T /home/ubuntu/Desktop/OS/Seminar/example_mutex/modules.order -i Module.symvers -e 

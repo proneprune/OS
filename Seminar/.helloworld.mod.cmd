@@ -1,0 +1,1 @@
+savedcmd_/home/ubuntu/Desktop/OS/Seminar/helloworld.mod := printf '%s\n'   helloworld.o | awk '!x[$$0]++ { print("/home/ubuntu/Desktop/OS/Seminar/"$$0) }' > /home/ubuntu/Desktop/OS/Seminar/helloworld.mod

@@ -1,0 +1,1 @@
+savedcmd_/home/ubuntu/Desktop/OS/Seminar/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/ubuntu/Desktop/OS/Seminar/Module.symvers -T /home/ubuntu/Desktop/OS/Seminar/modules.order -i Module.symvers -e 

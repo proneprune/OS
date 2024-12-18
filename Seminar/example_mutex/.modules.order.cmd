@@ -1,0 +1,1 @@
+savedcmd_/home/ubuntu/Desktop/OS/Seminar/example_mutex/modules.order := {   echo /home/ubuntu/Desktop/OS/Seminar/example_mutex/example_mutex.o; :; } > /home/ubuntu/Desktop/OS/Seminar/example_mutex/modules.order
